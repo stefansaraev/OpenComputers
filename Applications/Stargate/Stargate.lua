@@ -8,6 +8,7 @@ local component = require("component")
 local unicode = require("unicode")
 local event = require("event")
 local stargate
+local ninechevrongate = false
 
 if not component.isAvailable("stargate") then
 	GUI.error("Этой программе требуются Звездные Врата из мода \"SGCraft\"", {title = {color = 0xFF8888, text = "Ошибка"}})
@@ -16,21 +17,45 @@ else
 	stargate = component.stargate
 end
 
+if string.len(stargate.localAddress()) == 9 then
+	ninechevrongate = true
+end
+
 local toolbarWidth = 32
-local sg = image.load("MineOS/Applications/Stargate.app/Resources/Gate.pic")
-local sgCore = image.load("MineOS/Applications/Stargate.app/Resources/GateCore.pic")
+local sg
+local sgCore
 local pathToContacts = "MineOS/System/Stargate/Contacts2.cfg"
 local buttons = {}
 local contacts = {addresses = {}}
-local chevrons = {
-	{x = 5, y = 26, isActivated = false},
-	{x = 1, y = 15, isActivated = false},
-	{x = 12, y = 5, isActivated = false},
-	{x = 34, y = 1, isActivated = false},
-	{x = 56, y = 5, isActivated = false},
-	{x = 66, y = 15, isActivated = false},
-	{x = 63, y = 26, isActivated = false},
-}
+local chevrons = {}
+
+if ninechevrongate then
+	sg = image.load("MineOS/Applications/Stargate.app/Resources/Gate.pic") -- TODO: fixthis!
+	sgCore = image.load("MineOS/Applications/Stargate.app/Resources/GateCore.pic") -- TODO: fixthis!
+	chevrons = {
+		{x = 5, y = 26, isActivated = false},
+		{x = 1, y = 15, isActivated = false},
+		{x = 12, y = 5, isActivated = false},
+		{x = 34, y = 1, isActivated = false},
+		{x = 56, y = 5, isActivated = false},
+		{x = 66, y = 15, isActivated = false},
+		{x = 63, y = 26, isActivated = false},
+		{x = 63, y = 26, isActivated = false}, -- TODO: fix coords
+		{x = 63, y = 26, isActivated = false}, -- TODO: fix coords
+	}
+else
+	sg = image.load("MineOS/Applications/Stargate.app/Resources/Gate.pic")
+	sgCore = image.load("MineOS/Applications/Stargate.app/Resources/GateCore.pic")
+	chevrons = {
+		{x = 5, y = 26, isActivated = false},
+		{x = 1, y = 15, isActivated = false},
+		{x = 12, y = 5, isActivated = false},
+		{x = 34, y = 1, isActivated = false},
+		{x = 56, y = 5, isActivated = false},
+		{x = 66, y = 15, isActivated = false},
+		{x = 63, y = 26, isActivated = false},
+	}
+end
 
 local function loadContacts()
 	if fs.exists(pathToContacts) then
